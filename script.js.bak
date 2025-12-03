@@ -1,0 +1,87 @@
+const wineCatalog = {
+  "Château Lumière": {
+    2016: { score: 95, stock: 18 },
+    2018: { score: 93, stock: 24 },
+    2020: { score: 96, stock: 12 },
+  },
+  "Vigna Alta": {
+    2015: { score: 94, stock: 9 },
+    2019: { score: 92, stock: 30 },
+    2021: { score: 90, stock: 44 },
+  },
+  "Marin Ridge": {
+    2013: { score: 97, stock: 6 },
+    2017: { score: 91, stock: 26 },
+    2020: { score: 89, stock: 38 },
+  },
+};
+
+const brandTrigger = document.querySelector("#brandTrigger");
+const yearTrigger = document.querySelector("#yearTrigger");
+const brandDialog = document.querySelector("#brandDialog");
+const yearDialog = document.querySelector("#yearDialog");
+const brandList = document.querySelector("#brandList");
+const yearList = document.querySelector("#yearList");
+const result = document.querySelector("#result");
+
+let selectedBrand = null;
+let selectedYear = null;
+
+const closeButtons = Array.from(document.querySelectorAll("dialog .close"));
+closeButtons.forEach((btn) => {
+  btn.addEventListener("click", () => btn.closest("dialog").close());
+});
+
+function renderOptions(container, items, onPick) {
+  container.textContent = "";
+  items.forEach((value) => {
+    const optionBtn = document.createElement("button");
+    optionBtn.type = "button";
+    optionBtn.textContent = value;
+    optionBtn.addEventListener("click", () => onPick(value));
+    container.append(optionBtn);
+  });
+}
+
+function renderResult() {
+  if (!selectedBrand || !selectedYear) {
+    result.innerHTML = "<p>Waiting for a selection...</p>";
+    return;
+  }
+
+  const { score, stock } = wineCatalog[selectedBrand][selectedYear];
+  result.innerHTML = `
+    <strong>${selectedBrand} · ${selectedYear}</strong>
+    <p>Score: <span>${score} / 100</span></p>
+    <p>Cases in stock: <span>${stock}</span></p>
+  `;
+}
+
+brandTrigger.addEventListener("click", () => {
+  renderOptions(brandList, Object.keys(wineCatalog), (brand) => {
+    selectedBrand = brand;
+    selectedYear = null;
+    brandTrigger.textContent = brand;
+    yearTrigger.textContent = "Select year";
+    yearTrigger.disabled = false;
+    brandDialog.close();
+    renderResult();
+  });
+
+  brandDialog.showModal();
+});
+
+yearTrigger.addEventListener("click", () => {
+  if (yearTrigger.disabled || !selectedBrand) return;
+
+  const years = Object.keys(wineCatalog[selectedBrand]);
+  renderOptions(yearList, years, (year) => {
+    selectedYear = year;
+    yearTrigger.textContent = year;
+    yearDialog.close();
+    renderResult();
+  });
+
+  yearDialog.showModal();
+});
+

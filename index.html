@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>chiusheng.winesearch</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="card">
+      <header>
+        <h1>潮城紅酒酒款快速查詢</h1>
+        <p>選擇品牌和年份，立即查看分數和庫存！</p>
+      </header>
+
+      <section class="controls">
+        <button id="brandTrigger" type="button">選擇品牌</button>
+        <button id="yearTrigger" type="button" disabled>選擇年份</button>
+      </section>
+
+      <section class="result" id="result">
+        <p>等待選擇...</p>
+      </section>
+    </main>
+
+    <dialog id="brandDialog">
+      <h2>選擇品牌</h2>
+      <div class="dialog-list" id="brandList"></div>
+      <button class="close" value="cancel">取消</button>
+    </dialog>
+
+    <dialog id="yearDialog">
+      <h2>選擇年份</h2>
+      <div class="dialog-list" id="yearList"></div>
+      <button class="close" value="cancel">取消</button>
+    </dialog>
+
+    <script src="script.js"></script>
+  </body>
+</html>
