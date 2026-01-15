@@ -388,7 +388,7 @@ function init() {
     const { score, stock } = wineCatalog[selectedBrand][selectedYear];
     result.innerHTML = `
       <strong>${selectedBrand} · ${selectedYear}</strong>
-      <p>分數: <span>${score} / 100</span></p>
+      <p>分數: <span>${score}</span></p>
       <p>庫存: <span>${stock}</span></p>
     `;
   }
@@ -411,11 +411,26 @@ function init() {
     if (yearTrigger.disabled || !selectedBrand) return;
 
     const years = Object.keys(wineCatalog[selectedBrand]).map(Number).sort((a, b) => b - a).map(String);
-    renderOptions(yearList, years, (year) => {
-      selectedYear = year;
-      yearTrigger.textContent = year;
-      yearDialog.close();
-      renderResult();
+    
+    yearList.textContent = "";
+    years.forEach((year) => {
+      const optionBtn = document.createElement("button");
+      optionBtn.type = "button";
+      optionBtn.textContent = year;
+      
+      // Check if this year has stock and add highlight class
+      const yearData = wineCatalog[selectedBrand][year];
+      if (yearData && yearData.stock > 0) {
+        optionBtn.classList.add("in-stock");
+      }
+      
+      optionBtn.addEventListener("click", () => {
+        selectedYear = year;
+        yearTrigger.textContent = year;
+        yearDialog.close();
+        renderResult();
+      });
+      yearList.append(optionBtn);
     });
 
     yearDialog.showModal();
